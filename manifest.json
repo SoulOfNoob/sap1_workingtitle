@@ -1,0 +1,9 @@
+{
+  "name": "SAP Google Location Connector",
+  "version": "1.0",
+  "description": "The ultimate plugin!",
+  "background": {
+    "scripts": [ "background.js" ],
+    "persistent": false
+  }
+}

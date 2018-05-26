@@ -14,6 +14,6 @@
     "scripts": [ "background.js"],
     "persistent": true
   },
-  "permissions": [ "tabs", "activeTab", "webNavigation", "*://*/*" ],
+  "permissions": [ "storage", "tabs", "activeTab", "webNavigation", "*://*/*" ],
   "manifest_version": 2
 }

@@ -4,8 +4,8 @@
   "description": "The ultimate plugin!",
   "background": {
     "scripts": [ "background.js" ],
-    "persistent": false
+    "persistent": true
   },
-  "permissions": [ "activeTab", "webNavigation", "*://*/*" ],
+  "permissions": [ "tabs", "activeTab", "webNavigation", "*://*/*" ],
   "manifest_version": 2
 }

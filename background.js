@@ -1,5 +1,16 @@
 chrome.runtime.onInstalled.addListener(function () {
     var location_data = [];
+
+    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+        chrome.declarativeContent.onPageChanged.addRules([{
+            conditions: [new chrome.declarativeContent.PageStateMatcher({
+                pageUrl: {pathContains: 'timeline'},
+            })
+            ],
+            actions: [new chrome.declarativeContent.ShowPageAction()]
+        }]);
+    });
+
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         //alert(message+" received");
         location_data = JSON.parse(message);

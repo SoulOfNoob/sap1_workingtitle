@@ -31,8 +31,7 @@ emissions[14] = 0;
 emissions[0] = 0;
 
 function getEmissions(mode_id, distance) {
-    var p = emissions[mode_id];
-    return p * (distance / 1000);
+    return emissions[mode_id] * distance / 1000;
 }
 
 function calculatePoints(modes, distances) {

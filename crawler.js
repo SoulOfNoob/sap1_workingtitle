@@ -11,7 +11,7 @@ $(function() {
 
     $('.activities-wrapper').each(function(){
         //console.log($(this));
-        var type = $(this).find('.activity-type').text();
+        var type = $(this).find('.activity-type').closest('.timeline-item-title-content').attr('data-activity');
         var distance = $(this).find('.activity-type').parent().attr('data-distance');
         var time = $(this).parent().parent().prev().find('.segment-duration-part').last().text();
 

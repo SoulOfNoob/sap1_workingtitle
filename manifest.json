@@ -5,5 +5,7 @@
   "background": {
     "scripts": [ "background.js" ],
     "persistent": false
-  }
+  },
+  "permissions": [ "activeTab", "webNavigation", "*://*/*" ],
+  "manifest_version": 2
 }

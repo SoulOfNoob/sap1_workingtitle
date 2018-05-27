@@ -27,6 +27,7 @@ $(function () {
                 $( "#amount" ).val( pad((ui.values[ 0 ] / 60).toFixed(0), 2) + ":" + pad((ui.values[ 0 ] % 60).toFixed(0), 2) + " - " + pad((ui.values[ 1 ] / 60).toFixed(0), 2) + ":" + pad((ui.values[ 1 ] % 60).toFixed(0), 2));
             }
         });
+        slider_values = [9*60, 18*60]
         chrome.storage.sync.get(['slider_values'], function(result) {
             slider_values = result.slider_values;
             $( "#slider-range" ).slider( "values", 0, slider_values[0]);
@@ -45,7 +46,7 @@ function refreshTable() {
     emission_mode_array = [];
     emission_distance_array = [];
     $('#emissions').html("<thead></thead><tbody></tbody>");
-    $('#emissions').append($('<tr><th scope="col">Uhrzeit</th><th scope="col">Verkehrsmittel</th><th scope="col">Entfernung</th><th scope="col">Emissionen</th></tr>'));
+    $('#emissions').append($('<tr><th scope="col">Time</th><th scope="col">Transport</th><th scope="col">Distance</th><th scope="col">Emissions</th></tr>'));
     $(location_data).each(function () {
         if(inRange(this.time, $( "#slider-range" ).slider( "values", 0 ), $( "#slider-range" ).slider( "values", 1 ))) {
             var row = $('<tr></tr>');

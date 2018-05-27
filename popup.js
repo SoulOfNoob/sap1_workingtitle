@@ -81,6 +81,11 @@ function getEmissions(mode_id, distance) {
     return emissions[mode_id] * distance / 1000;
 }
 
+function isWhileWork(time, start, end) {
+    var min = (time.split(':')[0] * 60) + (time.split(':')[1] % 60);
+    return start <= min && min <= end;
+}
+
 function calculatePoints(modes, distances) {
     var points = 0;
     for (var i = 0; i < modes.length; i++) {

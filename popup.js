@@ -1,4 +1,5 @@
 var location_data = [];
+
 $(function () {
     chrome.storage.sync.get(['location_data'], function(result) {
         //$('#output').html(JSON.stringify(result.location_data));
@@ -42,6 +43,19 @@ $(function () {
         }
         $('#emissions').append($('<tr><th colspan="3" >Gesamt Emissionen: </th><th>' + emission_sum + '</th></tr>'));
         $('#emissions').append($('<tr><th colspan="3" >SAPlings: </th><th>' + calculatePoints(emission_mode_array, emission_distance_array) + '</th></tr>'));
+
+        $( "#slider-range" ).slider({
+            range: true,
+            min: 0,
+            max: (24*60),
+            values: [ (9*60), (18*60) ],
+            slide: function( event, ui ) {
+                $( "#amount" ).val( pad((ui.values[ 0 ] / 60).toFixed(0), 2) + ":" + pad((ui.values[ 0 ] % 60).toFixed(0), 2) + " - " + pad((ui.values[ 1 ] / 60).toFixed(0), 2) + ":" + pad((ui.values[ 1 ] % 60).toFixed(0), 2));
+            }
+        });
+        var slider_val_1 = $( "#slider-range" ).slider( "values", 0 );
+        var slider_val_2 = $( "#slider-range" ).slider( "values", 1 );
+        $( "#amount" ).val( "" + pad((slider_val_1 / 60).toFixed(0), 2) + ":" + pad((slider_val_1 % 60).toFixed(0), 2) + " - " + pad((slider_val_2 / 60).toFixed(0), 2) + ":" + pad((slider_val_2 % 60), 2) );
     });
 
 });
@@ -137,4 +151,9 @@ function getTypeName(type_id) {
     names[0]  = "Unterwegs";
 
     return names[type_id];
+}
+function pad(n, width, z) {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }

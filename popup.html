@@ -3,13 +3,22 @@
 <head>
     <meta charset="utf-8"/>
     <link rel="stylesheet" type="text/css" href="bootstrap.min.css" media="screen" />
+    <link rel="stylesheet" href="jquery-ui.css">
 </head>
 <body>
+    <p>
+        <label for="amount">Time Range:</label>
+        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+    </p>
+
+    <div id="slider-range"></div>
+
     <table id="emissions" class="table table-striped" width="400">
         <thead></thead>
         <tbody></tbody>
     </table>
     <script src="jquery-3.3.1.min.js"></script>
+    <script src="jquery-ui.js"></script>
     <script src="bootstrap.min.js"></script>
     <script src="popup.js"></script>
 </body>

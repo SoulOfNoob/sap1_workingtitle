@@ -35,7 +35,7 @@ $(function () {
 
             $('#emissions').append($(row).append($(time)).append($(type)).append($(distance)).append($(emissions)));
         });
-        $('#emissions').append($('<tr><th colspan="3" >Gesamt: </th><th>' + emission_sum + 'kg(' + calculatePoints(emission_mode_array, emission_distance_array) + ')</th></tr>'));
+        $('#emissions').append($('<tr><th colspan="3" >Gesamt: </th><th>' + emission_sum.toFixed(0) + 'kg(' + calculatePoints(emission_mode_array, emission_distance_array) + ')</th></tr>'));
     });
 
 });
@@ -81,7 +81,9 @@ function calculatePoints(modes, distances) {
         points += (140 - emissions[modes[i]]) * (distances[i] / 1000);
         points -= emissions[modes[i]] * (distances[i] / 1000);
     }
-    return points + 1400;
+    points += 1400;
+    if(points<0) points = 0;
+    return points.toFixed(0);
 }
 
 function getTypeName(type_id) {

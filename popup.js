@@ -1,4 +1,8 @@
 var location_data = [];
+var emission_sum = 0;
+var emission_mode_array = [];
+var emission_distance_array = [];
+var slider_values = [];
 
 $(function () {
     chrome.storage.sync.get(['location_data'], function(result) {
@@ -6,11 +10,44 @@ $(function () {
         //location_data = JSON.stringify(result.location_data);
         location_data = result.location_data;
         console.log(location_data);
-        var emission_sum = 0;
-        var emission_mode_array = [];
-        var emission_distance_array = [];
-        $('#emissions').append($('<tr><th scope="col">Uhrzeit</th><th scope="col">Verkehrsmittel</th><th scope="col">Entfernung</th><th scope="col">Emissionen</th></tr>'));
-        $(location_data).each(function () {
+
+        $( "#slider-range" ).slider({
+            range: true,
+            min: 0,
+            max: (24*60),
+            values: [ (9*60), (18*60) ],
+            change: function( event, ui ) {
+                console.log("slider changed");
+                chrome.storage.sync.set({slider_values: [$( "#slider-range" ).slider( "values", 0 ), $( "#slider-range" ).slider( "values", 1 )]}, function() {
+
+                });
+                refreshTable();
+            },
+            slide: function( event, ui ) {
+                $( "#amount" ).val( pad((ui.values[ 0 ] / 60).toFixed(0), 2) + ":" + pad((ui.values[ 0 ] % 60).toFixed(0), 2) + " - " + pad((ui.values[ 1 ] / 60).toFixed(0), 2) + ":" + pad((ui.values[ 1 ] % 60).toFixed(0), 2));
+            }
+        });
+        chrome.storage.sync.get(['slider_values'], function(result) {
+            slider_values = result.slider_values;
+            $( "#slider-range" ).slider( "values", 0, slider_values[0]);
+            $( "#slider-range" ).slider( "values", 1, slider_values[1]);
+
+            console.log(slider_values[0], (slider_values[0] / 60).toFixed(0), pad((slider_values[0] / 60).toFixed(0), 2));
+            $( "#amount" ).val( "" + pad((slider_values[0] / 60).toFixed(0), 2) + ":" + pad((slider_values[0] % 60).toFixed(0), 2) + " - " + pad((slider_values[1] / 60).toFixed(0), 2) + ":" + pad((slider_values[1] % 60), 2) );
+            refreshTable();
+        });
+    });
+
+});
+
+function refreshTable() {
+    emission_sum = 0;
+    emission_mode_array = [];
+    emission_distance_array = [];
+    $('#emissions').html("<thead></thead><tbody></tbody>");
+    $('#emissions').append($('<tr><th scope="col">Uhrzeit</th><th scope="col">Verkehrsmittel</th><th scope="col">Entfernung</th><th scope="col">Emissionen</th></tr>'));
+    $(location_data).each(function () {
+        if(inRange(this.time, $( "#slider-range" ).slider( "values", 0 ), $( "#slider-range" ).slider( "values", 1 ))) {
             var row = $('<tr></tr>');
             var time = $('<td></td>').html(this.time);
             var type = $('<td></td>').html(getTypeName(this.type));
@@ -35,30 +72,17 @@ $(function () {
             console.log(row, time, type, distance);
 
             $('#emissions').append($(row).append($(time)).append($(type)).append($(distance)).append($(emissions)));
-        });
-        if(emission_sum < 1000) {
-            emission_sum = emission_sum + "g"
-        }else{
-            emission_sum = (emission_sum / 1000).toFixed(2) + "kg"
         }
-        $('#emissions').append($('<tr><th colspan="3" >Gesamt Emissionen: </th><th>' + emission_sum + '</th></tr>'));
-        $('#emissions').append($('<tr><th colspan="3" >SAPlings: </th><th>' + calculatePoints(emission_mode_array, emission_distance_array) + '</th></tr>'));
-
-        $( "#slider-range" ).slider({
-            range: true,
-            min: 0,
-            max: (24*60),
-            values: [ (9*60), (18*60) ],
-            slide: function( event, ui ) {
-                $( "#amount" ).val( pad((ui.values[ 0 ] / 60).toFixed(0), 2) + ":" + pad((ui.values[ 0 ] % 60).toFixed(0), 2) + " - " + pad((ui.values[ 1 ] / 60).toFixed(0), 2) + ":" + pad((ui.values[ 1 ] % 60).toFixed(0), 2));
-            }
-        });
-        var slider_val_1 = $( "#slider-range" ).slider( "values", 0 );
-        var slider_val_2 = $( "#slider-range" ).slider( "values", 1 );
-        $( "#amount" ).val( "" + pad((slider_val_1 / 60).toFixed(0), 2) + ":" + pad((slider_val_1 % 60).toFixed(0), 2) + " - " + pad((slider_val_2 / 60).toFixed(0), 2) + ":" + pad((slider_val_2 % 60), 2) );
     });
+    if(emission_sum < 1000) {
+        emission_sum = emission_sum.toFixed(0) + "g"
+    }else{
+        emission_sum = (emission_sum / 1000).toFixed(2) + "kg"
+    }
+    $('#emissions').append($('<tr><th colspan="3" >Gesamt Emissionen: </th><th>' + emission_sum + '</th></tr>'));
+    $('#emissions').append($('<tr><th colspan="3" >SAPlings: </th><th>' + calculatePoints(emission_mode_array, emission_distance_array) + '</th></tr>'));
+}
 
-});
 var emissions = [];
 emissions[2] = 0;
 emissions[29] = 140;
@@ -95,9 +119,10 @@ function getEmissions(mode_id, distance) {
     return emissions[mode_id] * distance / 1000;
 }
 
-function isWhileWork(time, start, end) {
+function inRange(time, start, end) {
     var min = (time.split(':')[0] * 60) + (time.split(':')[1] % 60);
-    return start <= min && min <= end;
+    console.log(start, end, min, min >= start && min <= end);
+    return min >= start && min <= end;
 }
 
 function calculatePoints(modes, distances) {

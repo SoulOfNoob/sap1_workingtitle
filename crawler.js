@@ -2,13 +2,18 @@ console.log( "loaded!" );
 
 var location_data = [];
 
-document.addEventListener("hello", function(data) {
-    chrome.runtime.sendMessage(JSON.stringify(location_data));
-});
-
 $(function() {
     console.log( "jQ ready!" );
+    crawlData()
+});
 
+$('.timeline-subtitle').bind("DOMSubtreeModified",function(){
+    window.setTimeout(function () { crawlData(); },1000);
+});
+
+
+function crawlData() {
+    location_data = [];
     $('.activities-wrapper').each(function(){
         //console.log($(this));
         var type = $(this).find('.activity-type').closest('.timeline-item-title-content').attr('data-activity');
@@ -22,8 +27,11 @@ $(function() {
         location_data.push({type: type, distance: distance, time: time});
     });
     console.log(location_data);
+    saveToStorage();
+}
 
-    var event = document.createEvent('Event');
-    event.initEvent('hello');
-    document.dispatchEvent(event);
-});
+function saveToStorage() {
+    chrome.storage.sync.set({location_data: location_data}, function() {
+        console.log('Value is set to ' + JSON.stringify(location_data));
+    });
+}

@@ -27,16 +27,26 @@ $(function () {
                 $( "#amount" ).val( pad((ui.values[ 0 ] / 60).toFixed(0), 2) + ":" + pad((ui.values[ 0 ] % 60).toFixed(0), 2) + " - " + pad((ui.values[ 1 ] / 60).toFixed(0), 2) + ":" + pad((ui.values[ 1 ] % 60).toFixed(0), 2));
             }
         });
-        slider_values = [9*60, 18*60]
-        chrome.storage.sync.get(['slider_values'], function(result) {
-            slider_values = result.slider_values;
+        try {
+            chrome.storage.sync.get(['slider_values'], function(result) {
+                slider_values = result.slider_values;
+                $( "#slider-range" ).slider( "values", 0, slider_values[0]);
+                $( "#slider-range" ).slider( "values", 1, slider_values[1]);
+
+                console.log(slider_values[0], (slider_values[0] / 60).toFixed(0), pad((slider_values[0] / 60).toFixed(0), 2));
+                $( "#amount" ).val( "" + pad((slider_values[0] / 60).toFixed(0), 2) + ":" + pad((slider_values[0] % 60).toFixed(0), 2) + " - " + pad((slider_values[1] / 60).toFixed(0), 2) + ":" + pad((slider_values[1] % 60), 2) );
+                refreshTable();
+            });
+        } catch(err) {
+            slider_values = [(9*60), (18*60)];
             $( "#slider-range" ).slider( "values", 0, slider_values[0]);
             $( "#slider-range" ).slider( "values", 1, slider_values[1]);
 
             console.log(slider_values[0], (slider_values[0] / 60).toFixed(0), pad((slider_values[0] / 60).toFixed(0), 2));
             $( "#amount" ).val( "" + pad((slider_values[0] / 60).toFixed(0), 2) + ":" + pad((slider_values[0] % 60).toFixed(0), 2) + " - " + pad((slider_values[1] / 60).toFixed(0), 2) + ":" + pad((slider_values[1] % 60), 2) );
             refreshTable();
-        });
+        }
+
     });
 
 });

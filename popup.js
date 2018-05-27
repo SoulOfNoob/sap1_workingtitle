@@ -35,7 +35,7 @@ $(function () {
 
             $('#emissions').append($(row).append($(time)).append($(type)).append($(distance)).append($(emissions)));
         });
-        $('#emissions').append($('<tr><th colspan="3" >Gesamt: </th><th>' + emission_sum + '(' + calculatePoints(emission_mode_array, emission_distance_array) + ')</th></tr>'));
+        $('#emissions').append($('<tr><th colspan="3" >Gesamt: </th><th>' + emission_sum + 'kg(' + calculatePoints(emission_mode_array, emission_distance_array) + ')</th></tr>'));
     });
 
 });

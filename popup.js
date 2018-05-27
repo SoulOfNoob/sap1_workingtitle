@@ -25,7 +25,7 @@ $(function () {
             if(emission_val > 0){
                 font_color = "red";
             }
-            var emissions = $('<td style="color: ' + font_color + '"></td>').html(emission_val + "kg");
+            var emissions = $('<td style="color: ' + font_color + '"></td>').html(emission_val + "g");
             emission_sum += emission_val;
             emission_mode_array.push(this.type);
             emission_distance_array.push(this.distance);
@@ -72,14 +72,14 @@ emissions[14] = 0;
 emissions[0] = 0;
 
 function getEmissions(mode_id, distance) {
-    return emissions[mode_id] * distance / 1000000;
+    return emissions[mode_id] * distance / 1000;
 }
 
 function calculatePoints(modes, distances) {
     var points = 0;
     for (var i = 0; i < modes.length; i++) {
-        points += (140 - emissions[modes[i]]) * distances[i];
-        points -= emissions[modes[i]] * distances[i];
+        points += (140 - emissions[modes[i]]) * (distances[i] / 1000);
+        points -= emissions[modes[i]] * (distances[i] / 1000);
     }
     return points + 1400;
 }

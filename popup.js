@@ -35,7 +35,13 @@ $(function () {
 
             $('#emissions').append($(row).append($(time)).append($(type)).append($(distance)).append($(emissions)));
         });
-        $('#emissions').append($('<tr><th colspan="3" >Gesamt: </th><th>' + emission_sum.toFixed(0) + 'kg(' + calculatePoints(emission_mode_array, emission_distance_array) + ')</th></tr>'));
+        if(emission_sum < 1000) {
+            emission_sum = emission_sum + "g"
+        }else{
+            emission_sum = (emission_sum / 1000).toFixed(2) + "kg"
+        }
+        $('#emissions').append($('<tr><th colspan="3" >Gesamt Emissionen: </th><th>' + emission_sum + '</th></tr>'));
+        $('#emissions').append($('<tr><th colspan="3" >SAPlings: </th><th>' + calculatePoints(emission_mode_array, emission_distance_array) + '</th></tr>'));
     });
 
 });
@@ -83,19 +89,19 @@ function calculatePoints(modes, distances) {
     }
     points += 1400;
     if(points<0) points = 0;
-    return points.toFixed(0);
+    return (points / 100).toFixed(0);
 }
 
 function getTypeName(type_id) {
     var names = [];
-    names[2] = "Zu Fuß";
+    names[2]  = "Zu Fuß";
     names[29] = "Auto";
     names[36] = "Taxi";
-    names[7] = "Bus";
-    names[3] = "Fahrrad";
-    names[9] = "U-Bahn";
-    names[8] = "Zug";
-    names[5] = "Flugzeug";
+    names[7]  = "Bus";
+    names[3]  = "Fahrrad";
+    names[9]  = "U-Bahn";
+    names[8]  = "Zug";
+    names[5]  = "Flugzeug";
     names[10] = "Tram";
     names[30] = "Motorrad";
     names[11] = "Fähre";
@@ -106,7 +112,7 @@ function getTypeName(type_id) {
     names[24] = "Schneemobil";
     names[15] = "Kajakfahren";
     names[16] = "Kitesurfen";
-    names[6] = "Laufen";
+    names[6]  = "Laufen";
     names[32] = "Mit dem Rollstuhl";
     names[28] = "Nordic Walking";
     names[37] = "Paragliding";
@@ -123,7 +129,7 @@ function getTypeName(type_id) {
     names[23] = "Snowboarden";
     names[26] = "Surfen";
     names[14] = "Wandern";
-    names[0] = "Unterwegs";
+    names[0]  = "Unterwegs";
 
     return names[type_id];
 }
